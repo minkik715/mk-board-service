@@ -1,6 +1,8 @@
 package io.github.minkik715.board.mkboardservice.controller
 
 import SessionUtil
+import io.github.minkik715.board.mkboardservice.aop.LoginCheck
+import io.github.minkik715.board.mkboardservice.aop.LoginCheckAspect
 import io.github.minkik715.board.mkboardservice.dto.UserDTO
 import io.github.minkik715.board.mkboardservice.dto.UserLoginRequest
 import io.github.minkik715.board.mkboardservice.dto.UserUpdatePasswordRequest
@@ -50,11 +52,11 @@ class UserController(
     }
 
     @PutMapping("/password")
-    fun updatePassword(session: HttpSession, @RequestBody passwordUpdateRequest: UserUpdatePasswordRequest): ResponseEntity<Boolean> {
-        val id = SessionUtil.getLoginMemberId(session) ?: SessionUtil.getLoginAdminId(session) ?: throw UserNotFoundException(session.id)
+    @LoginCheck(type = LoginCheck.UserType.USER)
+    fun updatePassword(id: Long?, @RequestBody passwordUpdateRequest: UserUpdatePasswordRequest): ResponseEntity<Boolean> {
         return ResponseEntity.ok(
             userService.updatePassword(
-                id,
+                id!!,
                 passwordUpdateRequest.beforePassword,
                 passwordUpdateRequest.afterPassword
             )
