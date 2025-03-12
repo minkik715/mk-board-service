@@ -4,6 +4,7 @@ import io.github.minkik715.board.mkboardservice.dto.UserDTO
 import io.github.minkik715.board.mkboardservice.dto.UserLoginRequest
 import io.github.minkik715.board.mkboardservice.exception.DuplicateUserIdException
 import io.github.minkik715.board.mkboardservice.exception.UserNotFoundException
+import io.github.minkik715.board.mkboardservice.repository.PostRepository
 import io.github.minkik715.board.mkboardservice.repository.UserRepository
 import io.github.minkik715.board.mkboardservice.service.UserService
 import io.github.minkik715.board.mkboardservice.utils.SHA256Util
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserServiceImpl(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ): UserService {
     override fun register(userProfile: UserDTO): UserDTO {
         val duplicated = isDuplicatedId(userProfile.userId)

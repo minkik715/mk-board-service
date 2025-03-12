@@ -17,7 +17,7 @@ class LoginCheckAspect {
     val log = LoggerFactory.getLogger(LoginCheckAspect::class.java)
 
     @Around("@annotation(io.github.minkik715.board.mkboardservice.aop.LoginCheck) && @annotation(loginCheck)")
-    fun adminLoginCheck(joinPoint: ProceedingJoinPoint, loginCheck: LoginCheck) {
+    fun adminLoginCheck(joinPoint: ProceedingJoinPoint, loginCheck: LoginCheck): Any? {
         val session = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request.session
         val userType = loginCheck.type
 
@@ -36,7 +36,8 @@ class LoginCheckAspect {
         }
         val idIdx = 0;
         joinPoint.args.set(idIdx, id)
-        joinPoint.proceed(joinPoint.args)
+        val proceed = joinPoint.proceed(joinPoint.args)
+        return proceed
     }
 
 }
